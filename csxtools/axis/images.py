@@ -1,5 +1,5 @@
 import numpy as np
-from ..ext import fastccd
+from ..ext import axis
 import time as ttime
 
 import logging
@@ -48,7 +48,7 @@ def correct_images(images, dark=None, flat=None):
     #print(f'Nisar type: {type(images)}')
     images_numpy = images.compute()
     images_uint16 = images_numpy.astype(np.uint16)
-    data = fastccd.correct_images(images_uint16, dark, flat)
+    data = axis.correct_images(images_uint16, dark, flat)
     t = ttime.time() - t
 
     logger.info("Corrected image stack in %.3f seconds", t)

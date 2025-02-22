@@ -43,9 +43,9 @@
 #include <numpy/ndarraytypes.h>
 #include <numpy/ufuncobject.h>
 
-#include "fastccd.h"
+#include "axis.h"
 
-static PyObject* fastccd_correct_images(PyObject *self, PyObject *args){
+static PyObject* axis_correct_images(PyObject *self, PyObject *args){
   PyObject *_input = NULL;
   PyObject *_bgnd = NULL;
   PyObject *_flat = NULL;
@@ -57,13 +57,6 @@ static PyObject* fastccd_correct_images(PyObject *self, PyObject *args){
   npy_intp *dims_bgnd;
   npy_intp *dims_flat;
   int ndims;
-  //float gain[3];
-
-
-  //if(!PyArg_ParseTuple(args, "OOO(fff)", &_input, &_bgnd, &_flat,
-  //                                       &gain[0], &gain[1], &gain[2])){
-  //  return NULL;
-  //}
 
   if(!PyArg_ParseTuple(args, "OOO", &_input, &_bgnd, &_flat)){   
     return NULL;
@@ -88,22 +81,6 @@ static PyObject* fastccd_correct_images(PyObject *self, PyObject *args){
   dims_bgnd = PyArray_DIMS(bgnd);
   dims_flat = PyArray_DIMS(flat);
 
-  // Check array dimensions 0 and 1 are the same
-  //if(dims_bgnd[0] != 3){
-  //  PyErr_SetString(PyExc_ValueError, "Background array must have dimenion 0 = 3");
-  //  goto error;
-  //}
-//  if((dims[ndims-2] != dims_bgnd[1]) && (dims[ndims-2] != dims_flat[0])){
-//    if((dims[ndims-2] != dims_bgnd[0]) && (dims[ndims-2] != dims_flat[0])){
-//    PyErr_SetString(PyExc_ValueError, "Dimensions of image array (0) do not match");
-//    goto error;
-//  }
-  //if((dims[ndims-1] != dims_bgnd[2]) && (dims[ndims-1] != dims_flat[1])){
-//  if((dims[ndims-1] != dims_bgnd[1]) && (dims[ndims-1] != dims_flat[1])){
-//    PyErr_SetString(PyExc_ValueError, "Dimensions of image array (1) do not match");
-//    goto error;
-//  }
-
   // Check array dimensions for dark and flat
   if(dims[ndims-2] != dims_bgnd[0] || dims[ndims-1] != dims_bgnd[1]){
     PyErr_SetString(PyExc_ValueError, "Dimensions of image array do not match background array dimensions.");
@@ -127,10 +104,7 @@ static PyObject* fastccd_correct_images(PyObject *self, PyObject *args){
   // Ok now we don't touch Python Object ... Release the GIL
   Py_BEGIN_ALLOW_THREADS
 
-  //correct_fccd_images(input_p, out_p, bgnd_p, flat_p, 
-  //                  ndims, (index_t*)dims, (data_t*)gain);
-
-  correct_fccd_images(input_p, out_p, bgnd_p, flat_p,
+  correct_axis_images(input_p, out_p, bgnd_p, flat_p,
 		      ndims, (index_t*)dims);
   
   Py_END_ALLOW_THREADS
@@ -148,24 +122,24 @@ error:
   return NULL;
 }
 
-static PyMethodDef FastCCDMethods[] = {
-  { "correct_images", fastccd_correct_images, METH_VARARGS,
-    "Correct FastCCD Images"},
+static PyMethodDef AXISMethods[] = {
+  { "correct_images", axis_correct_images, METH_VARARGS,
+    "Correct AXIS Images"},
   {NULL, NULL, 0, NULL}
 };
 
-static struct PyModuleDef fastccdmodule = {
+static struct PyModuleDef axismodule = {
    PyModuleDef_HEAD_INIT,
-   "fastccd",   /* name of module */
+   "axis",   /* name of module */
    NULL,        /* module documentation, may be NULL */
    -1,          /* size of per-interpreter state of the module,
                    or -1 if the module keeps state in global variables. */
-   FastCCDMethods
+   AXISMethods
 };
 
-PyMODINIT_FUNC PyInit_fastccd(void) {
+PyMODINIT_FUNC PyInit_axis(void) {
   PyObject *m;
-  m = PyModule_Create(&fastccdmodule);
+  m = PyModule_Create(&axismodule);
   if(m == NULL){
     return NULL;
   }

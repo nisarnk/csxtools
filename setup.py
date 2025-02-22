@@ -46,9 +46,9 @@ with open("requirements.txt") as f:
 with open("requirements-extras.txt") as f:
     extras_require = {"complete": f.read().split()}
 
-fastccd = Extension(
-    "fastccd",
-    sources=["src/fastccdmodule.c", "src/fastccd.c"],
+axis = Extension(
+    "axis",
+    sources=["src/axismodule.c", "src/axis.c"],
     extra_compile_args=["-fopenmp"],
     extra_link_args=["-lgomp"],
 )
@@ -79,7 +79,7 @@ setup(
     long_description_content_type='text/markdown',
     ext_package="csxtools.ext",
     include_dirs=[np.get_include()],
-    ext_modules=[fastccd, image, phocount],
+    ext_modules=[axis, image, phocount],
     tests_require=["pytest"],
     install_requires=requirements,
     extras_require=extras_require,
