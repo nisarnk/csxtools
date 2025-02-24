@@ -46,9 +46,10 @@ def correct_images(images, dark=None, flat=None):
         flat = np.asarray(flat, dtype=np.float32)
 
     #print(f'Nisar type: {type(images)}')
-    images_numpy = images.compute()
-    images_uint16 = images_numpy.astype(np.uint16)
-    data = axis.correct_images(images_uint16, dark, flat)
+    #images_numpy = images.compute()
+    #images_uint16 = images_numpy.astype(np.uint16)
+    #data = axis.correct_images(images_uint16, dark, flat)
+    data = axis.correct_images(images.astype(np.uint16), dark, flat)
     t = ttime.time() - t
 
     logger.info("Corrected image stack in %.3f seconds", t)
