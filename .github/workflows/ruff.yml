@@ -1,4 +1,4 @@
-name: Check Code Style - RUFF
+name: Check Code Style - Ruff
 
 on: [push, pull_request]
 
@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -16,11 +17,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install ".[dev]"
+          pip install ruff==0.12.11
+
+      - name: Show Ruff version
+        run: ruff --version
 
       - name: Run Ruff
         run: |
-          ruff csxtools tests
+          ruff check . --output-format=github
