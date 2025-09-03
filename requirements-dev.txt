@@ -1,7 +1,0 @@
-codecov
-coveralls
-flake8
-pytest
-pytest-flake8
-sphinx
-sphinx-bootstrap-theme

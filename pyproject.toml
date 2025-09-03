@@ -15,3 +15,18 @@ exclude = [
     "csxtools.egg-info",
     "__pycache__"
 ]
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff>=0.4.0",
+]
+
+docs = [
+    "sphinx",
+    "sphinx-bootstrap-theme",
+]
+
+ci = [
+    "codecov",
+    "coveralls",
+]
