@@ -1,44 +1,39 @@
-name: Unit Tests
+name: Tests
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
-      fail-fast: false
     steps:
+      - uses: actions/checkout@v4
 
-    - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential python3-dev
 
-    - name: Install
-      shell: bash -l {0}
-      run: |
-        set -vxeuo pipefail
-        pip install --upgrade pip setuptools wheel
-        pip install ".[dev,ci]"
-        pip list
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel numpy
 
-    - name: Test with pytest
-      shell: bash -l {0}
-      run: |
-        set -vxeuo pipefail
-        coverage run --source=csxtools run_tests.py
-        coverage xml
+      - name: Install package (with dev extras)
+        run: pip install ".[dev]"
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        file: ./coverage.xml 
-        flags: unittests
+      - name: List built extensions
+        run: ls -lh csxtools/ext || true
 
+      - name: Run tests
+        run: |
+          set -vxeuo pipefail
+          coverage run --source=csxtools run_tests.py
+          coverage report -m
