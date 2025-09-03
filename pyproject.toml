@@ -30,3 +30,14 @@ ci = [
     "codecov",
     "coveralls",
 ]
+[project]
+name = "csxtools"
+version = "0.0.0"  # This will be overwritten by Versioneer in setup.py
+description = "Python library for CSX beamline tools at NSLS-II"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Brookhaven National Laboratory" }]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy"
+]
