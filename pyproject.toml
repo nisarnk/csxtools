@@ -49,7 +49,7 @@ complete = [
 [tool.setuptools.packages.find]
 exclude = ["src", "tests"]
 
-[tool.setuptools.dynamic]
+[tool.setuptools]
 ext_modules = [{name = "csxtools.ext.fastccd", sources=["src/fastccdmodule.c", "src/fastccd.c"], extra_compile_args=["-fopenmp"], extra_link_args=["-lgomp"]},
     {name = "csxtools.ext.axis1", sources=["src/axis1module.c", "src/axis1.c"], extra_compile_args=["-fopenmp"], extra_link_args=["-lgomp"]},
     {name = "csxtools.ext.image", sources=["src/imagemodule.c", "src/image.c"], extra_compile_args=["-fopenmp"], extra_link_args=["-lgomp"]},
