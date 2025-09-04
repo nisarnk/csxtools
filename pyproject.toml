@@ -6,6 +6,46 @@ requires = [
     "versioneer[toml]>=0.28"
 ]
 build-backend = "setuptools.build_meta"
+
+# Project metadata
+[project]
+name = "csxtools"
+version = "1.0.0" # You can remove this and use Versioneer
+description = "Python library for tools to be used at the Coherent Soft X-ray scattering (CSX) beamline at NSLS-II."
+readme = "README.md"
+authors = [
+    { name = "Brookhaven National Laboratory" },
+]
+license = { text = "BSD" }
+keywords = ["Xray Analysis"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+]
+
+# Optional dependencies (extras)
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+    "codecov",
+    "coveralls",
+    "pytest",
+    "sphinx",
+    "sphinx-bootstrap-theme",
+]
+complete = [
+    "databroker",
+    "ipywidgets",
+    "matplotlib",
+]
+
+# Ruff configuration
 [tool.ruff]
 exclude = [
     "examples",
@@ -15,3 +55,8 @@ exclude = [
     "csxtools.egg-info",
     "__pycache__"
 ]
+
+# Setuptools and Versioneer configuration
+[tool.setuptools]
+packages = ["csxtools"]
+include-package-data = false # Recommended to keep this as false and manage data files manually if needed
