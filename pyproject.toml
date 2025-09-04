@@ -10,7 +10,7 @@ build-backend = "setuptools.build_meta"
 # Project metadata
 [project]
 name = "csxtools"
-version = "1.0.0" # You can remove this and use Versioneer
+version = "1.0.0"
 description = "Python library for tools to be used at the Coherent Soft X-ray scattering (CSX) beamline at NSLS-II."
 readme = "README.md"
 authors = [
@@ -45,6 +45,17 @@ complete = [
     "matplotlib",
 ]
 
+# Setuptools configuration for C extensions
+[tool.setuptools.packages.find]
+exclude = ["src", "tests"]
+
+[tool.setuptools.dynamic]
+ext_modules = [{name = "csxtools.ext.fastccd", sources=["src/fastccdmodule.c", "src/fastccd.c"], extra_compile_args=["-fopenmp"], extra_link_args=["-lgomp"]},
+    {name = "csxtools.ext.axis1", sources=["src/axis1module.c", "src/axis1.c"], extra_compile_args=["-fopenmp"], extra_link_args=["-lgomp"]},
+    {name = "csxtools.ext.image", sources=["src/imagemodule.c", "src/image.c"], extra_compile_args=["-fopenmp"], extra_link_args=["-lgomp"]},
+    {name = "csxtools.ext.phocount", sources=["src/phocountmodule.c", "src/phocount.c"], extra_compile_args=["-fopenmp"], extra_link_args=["-lgomp"]}]
+
+
 # Ruff configuration
 [tool.ruff]
 exclude = [
@@ -55,8 +66,3 @@ exclude = [
     "csxtools.egg-info",
     "__pycache__"
 ]
-
-# Setuptools and Versioneer configuration
-[tool.setuptools]
-packages = ["csxtools"]
-include-package-data = false # Recommended to keep this as false and manage data files manually if needed
