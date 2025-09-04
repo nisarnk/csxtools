@@ -10,31 +10,45 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v4
 
+      # Step 2: Set up the correct Python version
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
+      # Step 3: Install system dependencies for C extensions
       - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential python3-dev
 
+      # Step 4: Install Python build dependencies
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel numpy
 
+      # Step 5: Install your package and dev/CI extras, forcing build of C extensions
       - name: Install package (with dev & CI extras)
         run: |
-          pip install ".[dev,ci]"
+          pip install --upgrade --force-reinstall --no-binary :all: ".[dev,ci]"
 
+      # Step 6: Verify that C extensions were built
       - name: List built extensions
         run: ls -lh csxtools/ext || true
 
+      # Step 7: Run tests with coverage
       - name: Run tests with coverage
         run: |
           set -vxeuo pipefail
           coverage run --source=csxtools run_tests.py
           coverage report -m
+
+      # Step 8 (Optional): Upload coverage to Codecov
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     file: ./coverage.xml
+      #     flags: unittests
